@@ -18,7 +18,10 @@ from typing import Callable, Dict, List, Optional, Any
 
 import streamlit as st
 from dotenv import load_dotenv
-from tavily import TavilyClient
+try:
+    from tavily import TavilyClient
+except ModuleNotFoundError:
+    from tavily_python import TavilyClient
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Environment & Globals
@@ -126,17 +129,40 @@ def internet_search(query: str) -> str:
 # BEGIN SOLUTION
 REVIEWER_INSTRUCTIONS = """
 
+You are the Reviewer Agent. Your job is to validate and improve the itinerary created
+by the Planner Agent before it is shown to the user.
+
+Your tasks:
+- Check if the plan is realistic (opening hours, travel distances, ticket prices, etc.).
+- Identify unrealistic or conflicting activities.
+- Use the `internet_search` tool to fact-check key details in real time.
+- Suggest fixes in a “Delta List” — bullet points of concrete changes and reasons.
+- Return:
+  1️⃣ A short validation summary
+  2️⃣ The Delta List of improvements
+  3️⃣ (Optionally) an improved version of the itinerary
+
 """
 
-PLANNER_INSTRUCTIONS = """
 
+PLANNER_INSTRUCTIONS = """
+You are the Planner Agent. Your job is to generate a clear, detailed travel itinerary
+based on the user's description.
+
+Your tasks:
+- Expand the user’s prompt into a day-by-day itinerary.
+- Include activities with approximate times, locations, estimated costs, and city clusters.
+- Consider key user constraints such as duration, dates, budget, and interests.
+- Ensure logical pacing and realistic transitions between locations.
+- Do NOT use the internet; rely only on your own knowledge.
+- Present the plan in a clean format labeled “Day 1, Day 2, …”.
 """
 
 reviewer_agent = Agent(
     name="Reviewer Agent",
     model="openai.gpt-4o",
     instructions=REVIEWER_INSTRUCTIONS.strip(),
-    tools=[]
+    tools=[internet_search]
 )
 
 planner_agent = Agent(
