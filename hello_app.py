@@ -140,7 +140,7 @@ Your tasks:
 - Return:
   1️⃣ A short validation summary
   2️⃣ The Delta List of improvements
-  3️⃣ (Optionally) an improved version of the itinerary
+  3️⃣ The finial improved version of the itinerary
 
 """
 
