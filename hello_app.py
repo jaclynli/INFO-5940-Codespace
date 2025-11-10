@@ -155,7 +155,7 @@ Your tasks:
 - Consider key user constraints such as duration, dates, budget, and interests.
 - Ensure logical pacing and realistic transitions between locations.
 - Do NOT use the internet; rely only on your own knowledge.
-- Present the plan in a clean format labeled “Day 1, Day 2, …”.
+- Organize the plan in a clean format labeled “Day 1, Day 2, …”.
 """
 
 reviewer_agent = Agent(
